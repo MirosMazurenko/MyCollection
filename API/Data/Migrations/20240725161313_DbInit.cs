@@ -19,9 +19,9 @@ namespace API.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ConsoleName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LoosePrice = table.Column<double>(type: "float", nullable: true),
-                    CompletePrice = table.Column<double>(type: "float", nullable: true),
-                    NewPrice = table.Column<double>(type: "float", nullable: true),
+                    LoosePrice = table.Column<double>(type: "float", nullable: false),
+                    CompletePrice = table.Column<double>(type: "float", nullable: false),
+                    NewPrice = table.Column<double>(type: "float", nullable: false),
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>

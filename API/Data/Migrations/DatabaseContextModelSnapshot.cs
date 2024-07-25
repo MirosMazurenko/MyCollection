@@ -30,7 +30,7 @@ namespace API.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<double?>("CompletePrice")
+                    b.Property<double>("CompletePrice")
                         .HasColumnType("float");
 
                     b.Property<string>("ConsoleName")
@@ -39,13 +39,13 @@ namespace API.Data.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<double?>("LoosePrice")
+                    b.Property<double>("LoosePrice")
                         .HasColumnType("float");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double?>("NewPrice")
+                    b.Property<double>("NewPrice")
                         .HasColumnType("float");
 
                     b.HasKey("Id");

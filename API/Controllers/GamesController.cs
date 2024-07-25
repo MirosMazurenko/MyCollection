@@ -1,29 +1,48 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using API.Data;
+using API.DTOs;
 using API.Entities;
+using API.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class GamesController
+    public class GamesController : BaseApiController
     {
-        private readonly DatabaseContext _context;
-
-        public GamesController(DatabaseContext context)
+        private readonly IGameService _gameService;
+        public GamesController(IGameService gameService)
         {
-            _context = context;
+            _gameService = gameService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Game>>> GetGames()
+        public async Task<ActionResult<List<GameDto>>> GetGames()
         {
-            return await _context.Games.ToListAsync();
+            var gamesDto = await _gameService.GetAllGamesAsync();
+
+            if (gamesDto == null) return NotFound();
+
+            return gamesDto;
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<GameDto>> GetGame(int id)
+        {
+            var gameDto = await _gameService.GetGameByIdAsync(id);
+
+            if (gameDto == null) return NotFound();
+
+            return gameDto;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CreateGame([FromQuery] GameDto gameDto)
+        {
+            if (gameDto == null) return BadRequest();
+
+            var result = await _gameService.CreateGameAsync(gameDto);
+
+            if (result) return StatusCode(StatusCodes.Status201Created);
+
+            return BadRequest(new ProblemDetails { Title = "Problem creating new game" });
         }
     }
 }
