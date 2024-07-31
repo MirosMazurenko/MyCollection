@@ -13,6 +13,6 @@ namespace API.Services.Interfaces
         Task<GameDto> GetGameByIdAsync(int id);
         Task<bool> CreateGameAsync(GameDto gameDto);
         Task<bool> UpdateAsync(GameDto gameDto);
-        Task<bool> DeleteAsync(GameDto gameDto);
+        Task<bool> DeleteAsync(int id);
     }
 }

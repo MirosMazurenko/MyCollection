@@ -44,5 +44,27 @@ namespace API.Controllers
 
             return BadRequest(new ProblemDetails { Title = "Problem creating new game" });
         }
+
+        [HttpPut]
+        public async Task<ActionResult> UpdateGame([FromQuery] GameDto gameDto)
+        {
+            if (gameDto == null) return BadRequest();
+
+            var result = await _gameService.UpdateAsync(gameDto);
+
+            if (result) return Ok(gameDto);
+
+            return BadRequest(new ProblemDetails { Title = "Problem updating game" });
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteGame(int id)
+        {
+            var result = await _gameService.DeleteAsync(id);
+
+            if (result) return Ok();
+
+            return BadRequest(new ProblemDetails { Title = "Problem removing game" });
+        }
     }
 }

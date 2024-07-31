@@ -59,11 +59,9 @@ namespace API.Services
 
             return await _gameRepository.Update(game);
         }
-        public async Task<bool> DeleteAsync(GameDto gameDto)
+        public async Task<bool> DeleteAsync(int id)
         {
-            if (gameDto == null) return false;
-
-            var game = _mapper.Map<Game>(gameDto);
+            var game = await _gameRepository.GetById(id);
 
             if (game == null) return false;
 

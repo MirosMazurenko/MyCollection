@@ -24,7 +24,7 @@ namespace API.Repositories.Interfaces
 
         public async Task<Game> GetById(int id)
         {
-            return await _context.Games.FirstOrDefaultAsync(g => g.Id == id);
+            return await _context.Games.FindAsync(id);
         }
 
         public async Task<bool> Insert(Game game)
