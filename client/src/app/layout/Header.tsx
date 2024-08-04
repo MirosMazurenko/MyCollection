@@ -2,6 +2,7 @@ import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import AppBar from '../components/AppBar';
 import Toolbar from '../components/Toolbar';
+import { NavLink } from 'react-router-dom';
 
 const rightLink = {
     fontSize: 16,
@@ -19,7 +20,8 @@ function Header() {
                         variant="h6"
                         underline="none"
                         color="inherit"
-                        // href="/premium-themes/onepirate/"
+                        component={NavLink}
+                        to="/"
                         sx={{ fontSize: 24 }}
                     >
                         {'mycollection'}

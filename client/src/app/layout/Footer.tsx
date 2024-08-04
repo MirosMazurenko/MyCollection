@@ -5,8 +5,8 @@ import Link from '@mui/material/Link';
 import Container from '@mui/material/Container';
 import Typography from '../components/Typography';
 import TextField from '../components/TextField';
-import appFooterFacebook from '../assets/images/appFooterFacebook.jpg';
-import appFooterX from '../assets/images/X.png';
+import appFooterFacebook from '../assets/images/footerImages/appFooterFacebook.jpg';
+import appFooterX from '../assets/images/footerImages/X.png';
 
 
 function Copyright() {
