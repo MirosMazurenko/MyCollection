@@ -17,9 +17,9 @@ namespace API.Repositories.Interfaces
             _context = context;
         }
 
-        public async Task<List<Game>> GetAll()
+        public IQueryable<Game> GetAll()
         {
-            return await _context.Games.ToListAsync();
+            return _context.Games.AsQueryable();
         }
 
         public async Task<Game> GetById(int id)

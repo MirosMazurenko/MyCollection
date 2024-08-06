@@ -1,5 +1,7 @@
 using API.DTOs;
 using API.Entities;
+using API.Extensions;
+using API.Pagination;
 using API.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,13 +16,15 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<GameDto>>> GetGames()
+        public async Task<ActionResult<PagedList<Game>>> GetGames([FromQuery] GameParams gameParams)
         {
-            var gamesDto = await _gameService.GetAllGamesAsync();
+            var games = await _gameService.GetAllGamesAsync(gameParams);
 
-            if (gamesDto == null) return NotFound();
+            if (games == null) return NotFound();
 
-            return gamesDto;
+            Response.AddPaginationHeader(games.MetaData);
+
+            return games;
         }
 
         [HttpGet("{id}")]

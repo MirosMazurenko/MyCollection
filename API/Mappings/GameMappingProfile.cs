@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.DTOs;
 using API.Entities;
+using API.Pagination;
 using AutoMapper;
 
 namespace API.Mappings

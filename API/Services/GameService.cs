@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.DTOs;
 using API.Entities;
+using API.Extensions;
+using API.Pagination;
 using API.Repositories.Interfaces;
 using API.Services.Interfaces;
 using AutoMapper;
@@ -20,14 +22,17 @@ namespace API.Services
             _gameRepository = gameRepository;
         }
 
-        public async Task<List<GameDto>> GetAllGamesAsync()
+        public async Task<PagedList<Game>> GetAllGamesAsync(GameParams gameParams)
         {
-            var games = await _gameRepository.GetAll();
+            var gamesQuery = _gameRepository.GetAll()
+                .Sort(gameParams.OrderBy)
+                .Search(gameParams.SearchTerm)
+                .Filter(gameParams.ConsoleName)
+                .AsQueryable();
 
-            if (!games.Any()) return null;
+            var games = await PagedList<Game>.ToPagedList(gamesQuery, gameParams.PageNumber, gameParams.PageSize);
 
-            var gamesDto = _mapper.Map<List<GameDto>>(games);
-            return gamesDto;
+            return games;
         }
         public async Task<GameDto> GetGameByIdAsync(int id)
         {

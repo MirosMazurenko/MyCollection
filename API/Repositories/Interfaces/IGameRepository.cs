@@ -9,7 +9,7 @@ namespace API.Repositories.Interfaces
 {
     public interface IGameRepository
     {
-        Task<List<Game>> GetAll();
+        IQueryable<Game> GetAll();
         Task<Game> GetById(int id);
         Task<bool> Insert(Game game);
         Task<bool> Update(Game newGame);
