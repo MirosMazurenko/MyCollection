@@ -2,6 +2,7 @@ import Button from '../../app/components/Button';
 import Typography from '../../app/components/Typography';
 import ProductHeroLayout from './ProductHeroLayout';
 import backgroundImage from '../../app/assets/images/homePageBodyImages/videogamescollage.png';
+import { NavLink } from 'react-router-dom';
 
 export default function ProductHero() {
     return (
@@ -12,13 +13,6 @@ export default function ProductHero() {
                 backgroundPosition: 'center',
             }}
         >
-            {/* Increase the network loading priority of the background image. */}
-            <img
-                style={{ display: 'none' }}
-                src={backgroundImage}
-                alt="increase priority"
-            />
-
             <Typography color="inherit" align="center" variant="h3" marked="center">
                 TRACK AND VALUE YOUR GAME COLLECTION
             </Typography>
@@ -34,8 +28,8 @@ export default function ProductHero() {
                 color="secondary"
                 variant="contained"
                 size="large"
-                component="a"
-                href="/premium-themes/onepirate/sign-up/"
+                component={NavLink}
+                to="/catalog"
                 sx={{ minWidth: 200 }}
             >
                 START TRACKING

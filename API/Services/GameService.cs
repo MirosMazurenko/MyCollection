@@ -27,7 +27,7 @@ namespace API.Services
             var gamesQuery = _gameRepository.GetAll()
                 .Sort(gameParams.OrderBy)
                 .Search(gameParams.SearchTerm)
-                .Filter(gameParams.ConsoleName)
+                .Filter(gameParams.Consoles)
                 .AsQueryable();
 
             var games = await PagedList<Game>.ToPagedList(gamesQuery, gameParams.PageNumber, gameParams.PageSize);

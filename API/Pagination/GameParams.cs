@@ -9,6 +9,6 @@ namespace API.Pagination
     {
         public string OrderBy { get; set; }
         public string SearchTerm { get; set; }
-        public string ConsoleName { get; set; }
+        public string Consoles { get; set; }
     }
 }

@@ -10,9 +10,21 @@ namespace API.Controllers
     public class GamesController : BaseApiController
     {
         private readonly IGameService _gameService;
-        public GamesController(IGameService gameService)
+        private readonly IConsoleService _consoleService;
+        public GamesController(IGameService gameService, IConsoleService consoleService)
         {
+            _consoleService = consoleService;
             _gameService = gameService;
+        }
+
+        [HttpGet("consoles")]
+        public async Task<ActionResult> GetConsoles()
+        {
+            var consoles = await _consoleService.GetConsoles();
+
+            if (consoles == null) return NotFound();
+
+            return Ok(new { consoles });
         }
 
         [HttpGet]
