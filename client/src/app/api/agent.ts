@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { PaginatedResponse } from "../models/pagination";
 
@@ -5,7 +6,6 @@ const sleep = () => new Promise(resolve => setTimeout(resolve, 500))
 
 axios.defaults.baseURL = `http://localhost:5085/api/`;
 axios.defaults.withCredentials = true;
-
 const responseBody = (response: AxiosResponse) => response.data;
 
 axios.interceptors.response.use(async response => {
@@ -49,12 +49,13 @@ axios.interceptors.response.use(async response => {
 
 const requests = {
     get: (url: string, params?: URLSearchParams) => axios.get(url, { params }).then(responseBody),
-    post: (url: string, body: object) =>
-        axios.post(url, body, { headers: { 'Content-Type': 'application/json', }, }).then(responseBody),
-    put: (url: string, body: object) =>
-        axios.put(url, body, { headers: { 'Content-Type': 'application/json', }, }).then(responseBody),
-    delete: (url: string) =>
-        axios.delete(url).then(responseBody),
+    post: (url: string, body?: object) => axios.post(url, body, {
+        headers: { 'Content-Type': 'application/json' } // Ensure content type is set to JSON
+    }).then(responseBody),
+    put: (url: string, body: object) => axios.put(url, body, {
+        headers: { 'Content-Type': 'application/json' }
+    }).then(responseBody),
+    del: (url: string) => axios.delete(url).then(responseBody),
 };
 
 const Catalog = {
@@ -63,8 +64,14 @@ const Catalog = {
     getConsoles: () => requests.get("games/consoles"),
 }
 
+const IGDB = {
+    getAccessToken: () => requests.post('igdb/twitchToken'),
+    getGameCover: (gameName: string) => requests.post(`igdb/${gameName}`),
+};
+
 const agent = {
     Catalog,
+    IGDB
 }
 
 export default agent;

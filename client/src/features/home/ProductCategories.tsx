@@ -90,7 +90,7 @@ const images = [
     title: 'Preservation Tips',
     width: '30%',
   },
-  
+
 ];
 
 export default function ProductCategories() {

@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Grid } from "@mui/material"
 import CatalogFilters from "./CatalogFilters"
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore"
-import { fetchConsolesAsync, fetchGamesAsync, gameSelectors } from "./catalogSlice"
+import { fetchConsolesAsync, fetchGameCoverAsync, fetchGamesAsync, gameSelectors } from "./catalogSlice"
 import { useEffect } from "react"
 import CatalogList from "./CatalogList"
 import CatalogPagination from "./CatalogPagination"
@@ -13,6 +14,15 @@ export default function Catalog() {
 
     useEffect(() => {
         if (!gamesLoaded) dispatch(fetchGamesAsync());
+
+        dispatch(fetchGameCoverAsync("007 GoldenEye")).unwrap()
+            .then((url: any) => {
+                console.log("Game URL:", url); // Check the logged token
+            })
+            .catch((error: any) => {
+                console.error("Error fetching access token:", error);
+            });
+
     }, [dispatch, gamesLoaded, gameParams]);
 
     useEffect(() => {
@@ -29,7 +39,7 @@ export default function Catalog() {
                 <CatalogFilters consoles={consoles} gameParams={gameParams} />
             </Grid>
             <Grid item xs={12} md={9}>
-                <CatalogList games={games} />
+                <CatalogList games={games} gamesLoaded={gamesLoaded} />
                 <CatalogPagination metaData={metaData} />
             </Grid>
         </Grid>

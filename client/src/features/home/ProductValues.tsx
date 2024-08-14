@@ -45,7 +45,7 @@ function ProductValues() {
                 {
                   'Keep an eye on your cherished video games, from the latest releases to rare classics. Ensure you never lose track of your prized possessions.'
                 }
-                
+
               </Typography>
             </Box>
           </Grid>
@@ -58,7 +58,7 @@ function ProductValues() {
                 sx={{ height: 55 }}
               />
               <Typography variant="h6" sx={{ my: 5 }}>
-              DISCOVER GAME VALUES
+                DISCOVER GAME VALUES
               </Typography>
               <Typography variant="h5">
                 {
@@ -75,8 +75,8 @@ function ProductValues() {
                 alt="clock"
                 sx={{ height: 45, mt: 1 }}
               />
-              <Typography variant="h6" sx={{ mb: 2, mt: 5}}>
-              CHOOSE YOUR GAME CONDITION
+              <Typography variant="h6" sx={{ mb: 2, mt: 5 }}>
+                CHOOSE YOUR GAME CONDITION
               </Typography>
               <Typography variant="h5">
                 {'Decide the best condition for your collection. Loose games offer affordability and easy playability. Complete in Box (CIB) games provide a sense of nostalgia with original packaging and manuals. New games ensure pristine condition and maximum value.'}

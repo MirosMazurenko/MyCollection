@@ -12,6 +12,8 @@ interface CatalogState {
     consoles: string[];
     gameParams: GameParams;
     metaData: MetaData | null;
+    accessToken: string | null;
+    // gameCovers: { [key: string]: string };
 }
 
 const gamesAdapter = createEntityAdapter<Game>();
@@ -61,6 +63,32 @@ export const fetchConsolesAsync = createAsyncThunk(
     }
 )
 
+export const fetchAccessTokenAsync = createAsyncThunk(
+    "catalog/fetchAccessTokenAsync",
+    async (_, thunkAPI) => {
+        try {
+            const response = await agent.IGDB.getAccessToken();
+            const accessToken = response.access_token;
+            return accessToken;
+        } catch (error: any) {
+            thunkAPI.rejectWithValue({ error: error.data })
+        }
+    }
+)
+
+export const fetchGameCoverAsync = createAsyncThunk<string, string>(
+    "catalog/fetchGameCoverByNameAsync",
+    async (gameName, thunkAPI) => {
+        try {
+            const response = await agent.IGDB.getGameCover(gameName);
+            const gameUrl = response.coverUrl;
+            return gameUrl;
+        } catch (error: any) {
+            thunkAPI.rejectWithValue({ error: error.data })
+        }
+    }
+);
+
 function initParams() {
     return {
         pageNumber: 1,
@@ -79,6 +107,8 @@ export const catalogSlice = createSlice({
         consoles: [],
         gameParams: initParams(),
         metaData: null,
+        accessToken: null,
+        // gameCovers: {},
     }),
     reducers: {
         setGameParams: (state, action) => {
@@ -91,6 +121,9 @@ export const catalogSlice = createSlice({
         },
         setMetadata: (state, action) => {
             state.metaData = action.payload;
+        },
+        setAccessToken: (state, action) => {
+            state.accessToken = action.payload;
         },
     },
     extraReducers: (builder => {
@@ -133,8 +166,35 @@ export const catalogSlice = createSlice({
             console.log(action);
             state.status = 'idle';
         });
+
+
+        builder.addCase(fetchAccessTokenAsync.pending, (state) => {
+            state.status = 'pendingFetchAccessToken';
+        });
+        builder.addCase(fetchAccessTokenAsync.fulfilled, (state, action) => {
+            state.status = 'idle';
+            state.accessToken = action.payload ?? null;
+        });
+        builder.addCase(fetchAccessTokenAsync.rejected, (state, action) => {
+            state.status = 'idle';
+            console.log(action.payload);
+        });
+
+
+        builder.addCase(fetchGameCoverAsync.pending, (state) => {
+            state.status = 'pendingfetchGameCoverAsync';
+        });
+        builder.addCase(fetchGameCoverAsync.fulfilled, (state) => {
+            // const gameName = action.meta.arg;
+            // state.gameCovers[gameName] = action.payload;
+            state.status = 'idle';
+        });
+        builder.addCase(fetchGameCoverAsync.rejected, (state, action) => {
+            state.status = 'idle';
+            console.error(action.payload);
+        });
     })
 })
 
 export const gameSelectors = gamesAdapter.getSelectors((state: RootState) => state.catalog);
-export const { setGameParams, setMetadata, setPageNumber, } = catalogSlice.actions;
+export const { setGameParams, setMetadata, setPageNumber, setAccessToken } = catalogSlice.actions;
