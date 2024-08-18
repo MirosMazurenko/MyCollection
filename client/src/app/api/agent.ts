@@ -60,7 +60,7 @@ const requests = {
 
 const Catalog = {
     getList: (params: URLSearchParams) => requests.get("games", params),
-    getGame: (id: number) => requests.get(`games/${id}`),
+    getGame: (id: number) => requests.get(`games/game/${id}`),
     getConsoles: () => requests.get("games/consoles"),
 }
 

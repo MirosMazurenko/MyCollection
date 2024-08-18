@@ -132,8 +132,8 @@ export const catalogSlice = createSlice({
         });
         builder.addCase(fetchGamesAsync.fulfilled, (state, action) => {
             gamesAdapter.setAll(state, action.payload);
-            state.status = 'idle';
             state.gamesLoaded = true;
+            state.status = 'idle';
         });
         builder.addCase(fetchGamesAsync.rejected, (state, action) => {
             console.log(action);

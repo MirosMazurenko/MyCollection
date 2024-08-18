@@ -27,7 +27,7 @@ namespace API.Controllers
             return Ok(new { consoles });
         }
 
-        [HttpGet]
+        [HttpGet("games")]
         public async Task<ActionResult<PagedList<Game>>> GetGames([FromQuery] GameParams gameParams)
         {
             var games = await _gameService.GetAllGamesAsync(gameParams);
@@ -39,7 +39,7 @@ namespace API.Controllers
             return games;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("game/{id}")]
         public async Task<ActionResult<GameDto>> GetGame(int id)
         {
             var gameDto = await _gameService.GetGameByIdAsync(id);
@@ -49,7 +49,7 @@ namespace API.Controllers
             return gameDto;
         }
 
-        [HttpPost]
+        [HttpPost("createGame")]
         public async Task<ActionResult> CreateGame([FromQuery] GameDto gameDto)
         {
             if (gameDto == null) return BadRequest();
@@ -61,7 +61,7 @@ namespace API.Controllers
             return BadRequest(new ProblemDetails { Title = "Problem creating new game" });
         }
 
-        [HttpPut]
+        [HttpPut("updateGame")]
         public async Task<ActionResult> UpdateGame([FromQuery] GameDto gameDto)
         {
             if (gameDto == null) return BadRequest();
@@ -73,7 +73,7 @@ namespace API.Controllers
             return BadRequest(new ProblemDetails { Title = "Problem updating game" });
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("deleteGame/{id}")]
         public async Task<ActionResult> DeleteGame(int id)
         {
             var result = await _gameService.DeleteAsync(id);

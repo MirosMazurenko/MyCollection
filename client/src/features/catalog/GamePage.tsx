@@ -8,22 +8,30 @@ import Typography from "../../app/components/Typography";
 
 export default function GamePage() {
     const dispatch = useAppDispatch();
-    const [gameUrl, setGameUrl] = useState("");
+    const [gameUrl, setGameUrl] = useState<string>("");
     const { id } = useParams<{ id: string }>();
     const game = useAppSelector(state => gameSelectors.selectById(state, parseInt(id!)));
     const noImage = "https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg";
 
     useEffect(() => {
-        if (!game && id) dispatch(fetchGameAsync(parseInt(id)));
-
-        dispatch(fetchGameCoverAsync(game.name)).unwrap()
-            .then((url: any) => {
-                setGameUrl(url);
-            })
-            .catch((error: any) => {
-                console.error("Error fetching game picture:", error);
-            });
+        if (!game && id) {
+            dispatch(fetchGameAsync(parseInt(id)));
+        }
     }, [dispatch, game, id]);
+
+    useEffect(() => {
+        if (game?.name) {
+            dispatch(fetchGameCoverAsync(game.name)).unwrap()
+                .then((url: string) => {
+                    setGameUrl(url);
+                })
+                .catch((error: Error) => {
+                    console.error("Error fetching game picture:", error);
+                });
+        }
+    }, [dispatch, game?.name]);
+
+    if (!game) return null;
 
     return (
         <Box display="flex" justifyContent="center" alignItems="center" sx={{ mt: 10, mb: 20 }}>
@@ -32,8 +40,8 @@ export default function GamePage() {
                     <CardMedia
                         component="img"
                         style={{ height: '400px', width: '100%', objectFit: 'contain' }}
-                        image={gameUrl ? gameUrl : noImage}
-                        alt={game.name}
+                        image={gameUrl || noImage}
+                        alt={game.name || "No image available"}
                     />
                     <CardContent>
                         <Typography variant="h5">{game.name}</Typography>
@@ -44,7 +52,7 @@ export default function GamePage() {
                             <Grid container alignItems="center">
                                 <Grid item xs>
                                     <Typography variant="body1" color="textPrimary">
-                                        Loose Price: <span style={{ color: 'blue' }}>$ {game.loosePrice}</span>
+                                        Loose Price: <span style={{ color: 'blue' }}>${game.loosePrice}</span>
                                     </Typography>
                                 </Grid>
                                 <Grid item>
@@ -56,7 +64,7 @@ export default function GamePage() {
                             <Grid container alignItems="center" style={{ marginTop: '0.5rem' }}>
                                 <Grid item xs>
                                     <Typography variant="body1" color="textPrimary">
-                                        Complete Price: <span style={{ color: 'blue' }}>$ {game.completePrice}</span>
+                                        Complete Price: <span style={{ color: 'blue' }}>${game.completePrice}</span>
                                     </Typography>
                                 </Grid>
                                 <Grid item>
@@ -68,7 +76,7 @@ export default function GamePage() {
                             <Grid container alignItems="center" style={{ marginTop: '0.5rem' }}>
                                 <Grid item xs>
                                     <Typography variant="body1" color="textPrimary">
-                                        New Price: <span style={{ color: 'blue' }}>$ {game.newPrice}</span>
+                                        New Price: <span style={{ color: 'blue' }}>${game.newPrice}</span>
                                     </Typography>
                                 </Grid>
                                 <Grid item>
