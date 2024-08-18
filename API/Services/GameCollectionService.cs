@@ -44,19 +44,19 @@ namespace API.Services
             return gameCollection;
         }
 
-        public async Task<bool> InsertGameInCollection(GameCollection gameCollection, int gameId)
+        public async Task<bool> InsertGameInCollection(GameCollection gameCollection, int gameId, string gameCondition)
         {
             if (gameCollection == null) return false;
 
             var game = await _gameRepository.GetById(gameId);
 
-            return await _gameCollectionRepository.Insert(gameCollection, game);
+            return await _gameCollectionRepository.Insert(gameCollection, game, gameCondition);
         }
-        public Task<bool> RemoveGameFromCollection(GameCollection gameCollection, GameDto gameDto)
+        public Task<bool> RemoveGameFromCollection(GameCollection gameCollection, GameDto gameDto, string gameCondition)
         {
             if (gameDto == null || gameCollection == null) return null;
 
-            return _gameCollectionRepository.Delete(gameCollection, gameDto.Id);
+            return _gameCollectionRepository.Delete(gameCollection, gameDto.Id, gameCondition);
         }
     }
 }

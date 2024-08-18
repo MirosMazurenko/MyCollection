@@ -27,7 +27,7 @@ namespace API.Controllers
             return Ok(new { consoles });
         }
 
-        [HttpGet("games")]
+        [HttpGet]
         public async Task<ActionResult<PagedList<Game>>> GetGames([FromQuery] GameParams gameParams)
         {
             var games = await _gameService.GetAllGamesAsync(gameParams);

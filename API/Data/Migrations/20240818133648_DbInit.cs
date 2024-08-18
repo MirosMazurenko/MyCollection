@@ -198,6 +198,7 @@ namespace API.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     GameId = table.Column<int>(type: "int", nullable: false),
+                    GameCondition = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CollectionId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>

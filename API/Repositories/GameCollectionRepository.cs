@@ -29,15 +29,15 @@ namespace API.Repositories
             _context.GameCollections.Add(gameCollection);
             return await _context.SaveChangesAsync() > 0;
         }
-        public async Task<bool> Insert(GameCollection gameCollection, Game game)
+        public async Task<bool> Insert(GameCollection gameCollection, Game game, string gameCondition)
         {
-            gameCollection.AddItem(game);
+            gameCollection.AddItem(game, gameCondition);
             return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> Delete(GameCollection gameCollection, int gameId)
+        public async Task<bool> Delete(GameCollection gameCollection, int gameId, string gameCondition)
         {
-            gameCollection.RemoveItem(gameId);
+            gameCollection.RemoveItem(gameId, gameCondition);
             return await _context.SaveChangesAsync() > 0;
         }
     }

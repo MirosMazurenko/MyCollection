@@ -10,7 +10,7 @@ namespace API.Repositories.Interfaces
     {
         Task<GameCollection> GetById(string userId);
         Task<bool> Create(GameCollection gameCollection);
-        Task<bool> Insert(GameCollection gameCollection, Game game);
-        Task<bool> Delete(GameCollection gameCollection, int gameId);
+        Task<bool> Insert(GameCollection gameCollection, Game game, string gameCondition);
+        Task<bool> Delete(GameCollection gameCollection, int gameId, string gameCondition);
     }
 }

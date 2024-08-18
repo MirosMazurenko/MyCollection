@@ -41,21 +41,20 @@ namespace API.Controllers
 
         [Authorize(Roles = "Member")]
         [HttpPost("addItem")]
-        public async Task<IActionResult> AddItemToCollection(int gameId)
+        public async Task<IActionResult> AddItemToCollection(int gameId, string gameCondition)
         {
             var userId = GetUserId();
             if (string.IsNullOrEmpty(userId))
             {
                 return Unauthorized();
             }
+            if (gameCondition != "Loose" && gameCondition != "Cib" && gameCondition != "New") return NotFound();
 
             var gameCollection = await _gameCollectionService.GetGameCollection(userId);
-            //var gameDto = await _gameService.GetGameByIdAsync(gameId);
-            //if (gameDto == null) return NotFound();
 
             gameCollection ??= await _gameCollectionService.CreateGameCollection(userId);
 
-            var result = await _gameCollectionService.InsertGameInCollection(gameCollection, gameId);
+            var result = await _gameCollectionService.InsertGameInCollection(gameCollection, gameId, gameCondition);
             if (result) return Ok();
 
             return BadRequest();
@@ -63,7 +62,7 @@ namespace API.Controllers
 
         [Authorize(Roles = "Member")]
         [HttpDelete("removeItem")]
-        public async Task<IActionResult> RemoveItemFromCollection(int productId)
+        public async Task<IActionResult> RemoveItemFromCollection(int productId, string gameCondition)
         {
             var userId = GetUserId();
             if (string.IsNullOrEmpty(userId))
@@ -77,7 +76,9 @@ namespace API.Controllers
             var gameDto = await _gameService.GetGameByIdAsync(productId);
             if (gameDto == null) return NotFound();
 
-            var result = await _gameCollectionService.RemoveGameFromCollection(gameCollection, gameDto);
+            if (gameCondition != "Loose" && gameCondition != "Cib" && gameCondition != "New") return NotFound();
+
+            var result = await _gameCollectionService.RemoveGameFromCollection(gameCollection, gameDto, gameCondition);
             if (result) return Ok();
 
             return BadRequest();

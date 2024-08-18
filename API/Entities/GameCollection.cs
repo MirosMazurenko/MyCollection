@@ -11,18 +11,14 @@ namespace API.Entities
         public string UserId { get; set; }
         public List<CollectionItem> Items { get; set; } = new List<CollectionItem>();
 
-        public void AddItem(Game game)
+        public void AddItem(Game game, string gameCondition)
         {
-            if (Items.All(item => item.GameId != game.Id))
-            {
-                Items.Add(new CollectionItem { Game = game });
-            }
-            else return;
+            Items.Add(new CollectionItem { GameCondition = gameCondition, Game = game });
         }
 
-        public void RemoveItem(int gameId)
+        public void RemoveItem(int gameId, string gameCondition)
         {
-            var item = Items.FirstOrDefault(item => item.GameId == gameId);
+            var item = Items.FirstOrDefault(item => item.GameId == gameId && item.GameCondition == gameCondition);
 
             if (item == null) return;
 

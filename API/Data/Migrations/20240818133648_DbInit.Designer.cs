@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20240817125725_DbInit")]
+    [Migration("20240818133648_DbInit")]
     partial class DbInit
     {
         /// <inheritdoc />
@@ -35,6 +35,9 @@ namespace API.Data.Migrations
 
                     b.Property<int>("CollectionId")
                         .HasColumnType("int");
+
+                    b.Property<string>("GameCondition")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("GameId")
                         .HasColumnType("int");

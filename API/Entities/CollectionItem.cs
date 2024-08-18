@@ -9,6 +9,7 @@ namespace API.Entities
     {
         public int Id { get; set; }
         public int GameId { get; set; }
+        public string GameCondition { get; set; }
         public Game Game { get; set; }
 
         public int CollectionId { get; set; }
