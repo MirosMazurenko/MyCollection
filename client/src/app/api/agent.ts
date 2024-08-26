@@ -60,7 +60,7 @@ const requests = {
     post: (url: string, body?: object) => axios.post(url, body, {
         headers: { 'Content-Type': 'application/json' }
     }).then(responseBody),
-    put: (url: string, body: object) => axios.put(url, body, {
+    put: (url: string, body?: object) => axios.put(url, body, {
         headers: { 'Content-Type': 'application/json' }
     }).then(responseBody),
     del: (url: string) => axios.delete(url).then(responseBody),
@@ -69,6 +69,8 @@ const requests = {
 const Catalog = {
     getList: (params: URLSearchParams) => requests.get("games", params),
     getGame: (id: number) => requests.get(`games/game/${id}`),
+    removeGame: (id: number) => requests.del(`games/deleteGame/${id}`),
+    updateGame: (id: number, name: string, consoleName: string, loosePrice: number, completePrice: number, newPrice: number, date: Date) => requests.put(`games/updateGame?Id=${id}&Name=${name}&ConsoleName=${consoleName}&LoosePrice=${loosePrice}&CompletePrice=${completePrice}&NewPrice=${newPrice}&Date=${date}'`),
     getConsoles: () => requests.get("games/consoles"),
 }
 

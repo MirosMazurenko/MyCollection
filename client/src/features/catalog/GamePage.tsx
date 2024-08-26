@@ -3,12 +3,13 @@
 import { Card, CardContent, CardMedia, Grid, Button, Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
-import { fetchGameAsync, fetchGameCoverAsync, gameSelectors } from "./catalogSlice";
+import { fetchGameAsync, fetchGameCoverAsync, gameSelectors, removeProduct } from "./catalogSlice";
 import { useNavigate, useParams } from "react-router-dom";
 import Typography from "../../app/components/Typography";
 import { addGameCollectionItemAsync } from "../gameCollection/gameCollectionSlice";
 import NotFound from "../../app/errors/NotFound";
 import { toast } from "react-toastify";
+import agent from "../../app/api/agent";
 
 export default function GamePage() {
     const dispatch = useAppDispatch();
@@ -37,7 +38,7 @@ export default function GamePage() {
         }
     }, [dispatch, game?.name]);
 
-    const handleButtonClick = (gameCondition: string) => {
+    const handleAddButtonClick = (gameCondition: string) => {
         if (!user) {
             navigate('/sign-in');
         } else {
@@ -50,6 +51,16 @@ export default function GamePage() {
                     toast.error('You already have this game!');
                 });
         }
+    };
+    const handleDeleteButtonClick = () => {
+        agent.Catalog.removeGame(parseInt(id!)).then(() => {
+            dispatch(removeProduct(parseInt(id!)));
+            toast.success("Game deleted!");
+            navigate('/catalog');
+        }).catch(error => {
+            console.log(error);
+            toast.error("Something went wrong")
+        })
     };
 
     if (!game) return <NotFound></NotFound>;
@@ -77,7 +88,7 @@ export default function GamePage() {
                                     </Typography>
                                 </Grid>
                                 <Grid item>
-                                    <Button onClick={() => handleButtonClick("Loose")} variant="contained" color="primary" size="small" style={{ minWidth: '100px' }}>
+                                    <Button onClick={() => handleAddButtonClick("Loose")} variant="contained" color="primary" size="small" style={{ minWidth: '100px' }}>
                                         Add Loose
                                     </Button>
                                 </Grid>
@@ -89,7 +100,7 @@ export default function GamePage() {
                                     </Typography>
                                 </Grid>
                                 <Grid item>
-                                    <Button onClick={() => handleButtonClick("Cib")} variant="contained" color="primary" size="small" style={{ minWidth: '100px' }}>
+                                    <Button onClick={() => handleAddButtonClick("Cib")} variant="contained" color="primary" size="small" style={{ minWidth: '100px' }}>
                                         Add Cib
                                     </Button>
                                 </Grid>
@@ -101,11 +112,20 @@ export default function GamePage() {
                                     </Typography>
                                 </Grid>
                                 <Grid item>
-                                    <Button onClick={() => handleButtonClick("New")} variant="contained" color="primary" size="small" style={{ minWidth: '100px' }}>
+                                    <Button onClick={() => handleAddButtonClick("New")} variant="contained" color="primary" size="small" style={{ minWidth: '100px' }}>
                                         Add New
                                     </Button>
                                 </Grid>
                             </Grid>
+                            {user && !user.roles?.includes('Member') && <div>
+                                <hr />
+                                <Grid container justifyContent="space-between" alignItems="center" style={{ marginTop: '0.5rem' }}>
+                                    <Grid item>
+                                        <Button onClick={() => handleDeleteButtonClick()} variant="contained" color="primary" size="small" style={{ backgroundColor: "red", minWidth: '100px' }}>
+                                            Delete game
+                                        </Button>
+                                    </Grid>
+                                </Grid></div>}
                         </div>
                     </CardContent>
                 </Card>

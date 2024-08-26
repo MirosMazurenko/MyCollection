@@ -124,6 +124,10 @@ export const catalogSlice = createSlice({
         setAccessToken: (state, action) => {
             state.accessToken = action.payload;
         },
+        removeProduct: (state, action) => {
+            gamesAdapter.removeOne(state, action.payload);
+            state.gamesLoaded = false;
+        },
     },
     extraReducers: (builder => {
         builder.addCase(fetchGamesAsync.pending, (state) => {
@@ -196,4 +200,4 @@ export const catalogSlice = createSlice({
 })
 
 export const gameSelectors = gamesAdapter.getSelectors((state: RootState) => state.catalog);
-export const { setGameParams, setMetadata, setPageNumber, setAccessToken } = catalogSlice.actions;
+export const { setGameParams, setMetadata, setPageNumber, setAccessToken, removeProduct } = catalogSlice.actions;

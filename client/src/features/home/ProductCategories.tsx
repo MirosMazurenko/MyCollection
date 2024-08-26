@@ -9,6 +9,7 @@ import newGame from '../../app/assets/images/homePageBodyImages/newGame.png';
 import marketValue from '../../app/assets/images/homePageBodyImages/marketValue.png';
 import preservationTips from '../../app/assets/images/homePageBodyImages/preservationTips.png';
 import yourCollection from '../../app/assets/images/homePageBodyImages/yourCollection.png';
+import { Link } from 'react-router-dom';
 
 
 const ImageBackdrop = styled('div')(({ theme }) => ({
@@ -99,8 +100,10 @@ export default function ProductCategories() {
       <Typography variant="h4" marked="center" align="center" component="h2">
         FOR ALL COLLECTORS AND ENTHUSIASTS
       </Typography>
-      <Box sx={{ mt: 8, display: 'flex', flexWrap: 'wrap' }}>
+      <Box component={Link}
+        to="/catalog" sx={{ mt: 8, display: 'flex', flexWrap: 'wrap' }}>
         {images.map((image) => (
+
           <ImageIconButton
             key={image.title}
             style={{
