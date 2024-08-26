@@ -3,6 +3,8 @@ import Link from '@mui/material/Link';
 import AppBar from '../components/AppBar';
 import Toolbar from '../components/Toolbar';
 import { NavLink } from 'react-router-dom';
+import SignedInMenu from './SignedInMenu';
+import { useAppSelector } from '../store/configureStore';
 
 const rightLink = {
     fontSize: 16,
@@ -11,6 +13,7 @@ const rightLink = {
 };
 
 function Header() {
+    const { user } = useAppSelector(state => state.account);
     return (
         <div>
             <AppBar position="fixed">
@@ -26,12 +29,13 @@ function Header() {
                     >
                         {'mycollection'}
                     </Link>
-                    <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
+                    {user ? <SignedInMenu /> : <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
                         <Link
                             color="inherit"
                             variant="h6"
                             underline="none"
-                            //href="/premium-themes/onepirate/sign-in/"
+                            component={NavLink}
+                            to="/sign-in"
                             sx={rightLink}
                         >
                             {'Sign In'}
@@ -39,12 +43,13 @@ function Header() {
                         <Link
                             variant="h6"
                             underline="none"
-                            //href="/premium-themes/onepirate/sign-up/"
+                            component={NavLink}
+                            to="/register"
                             sx={{ ...rightLink, color: 'secondary.main' }}
                         >
                             {'Sign Up'}
                         </Link>
-                    </Box>
+                    </Box>}
                 </Toolbar>
             </AppBar>
             <Toolbar />

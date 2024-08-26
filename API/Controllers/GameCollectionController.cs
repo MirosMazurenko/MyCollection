@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.DTOs;
 using API.Services;
 using API.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -25,23 +26,23 @@ namespace API.Controllers
 
         [Authorize(Roles = "Member")]
         [HttpGet("getGameCollection")]
-        public async Task<IActionResult> GetGameCollection()
+        public async Task<ActionResult<GameCollectionDto>> GetGameCollection()
         {
             var userId = GetUserId();
             if (string.IsNullOrEmpty(userId))
             {
                 return Unauthorized();
             }
-            var gameCollection = await _gameCollectionService.GetGameCollection(userId);
+            var gameCollectionDto = await _gameCollectionService.GetGameCollectionDto(userId);
 
-            if (gameCollection == null || gameCollection.Items.Count == 0) return NotFound();
+            if (gameCollectionDto == null || gameCollectionDto.Items.Count == 0) return NotFound();
 
-            return Ok(gameCollection);
+            return Ok(gameCollectionDto);
         }
 
         [Authorize(Roles = "Member")]
         [HttpPost("addItem")]
-        public async Task<IActionResult> AddItemToCollection(int gameId, string gameCondition)
+        public async Task<ActionResult> AddItemToCollection(int gameId, string gameCondition)
         {
             var userId = GetUserId();
             if (string.IsNullOrEmpty(userId))
@@ -50,11 +51,11 @@ namespace API.Controllers
             }
             if (gameCondition != "Loose" && gameCondition != "Cib" && gameCondition != "New") return NotFound();
 
-            var gameCollection = await _gameCollectionService.GetGameCollection(userId);
+            var gameCollectionDto = await _gameCollectionService.GetGameCollection(userId);
 
-            gameCollection ??= await _gameCollectionService.CreateGameCollection(userId);
+            gameCollectionDto ??= await _gameCollectionService.CreateGameCollection(userId);
 
-            var result = await _gameCollectionService.InsertGameInCollection(gameCollection, gameId, gameCondition);
+            var result = await _gameCollectionService.InsertGameInCollection(gameCollectionDto, gameId, gameCondition);
             if (result) return Ok();
 
             return BadRequest();
@@ -62,7 +63,7 @@ namespace API.Controllers
 
         [Authorize(Roles = "Member")]
         [HttpDelete("removeItem")]
-        public async Task<IActionResult> RemoveItemFromCollection(int productId, string gameCondition)
+        public async Task<ActionResult> RemoveItemFromCollection(int gameId, string gameCondition)
         {
             var userId = GetUserId();
             if (string.IsNullOrEmpty(userId))
@@ -70,15 +71,15 @@ namespace API.Controllers
                 return Unauthorized();
             }
 
-            var gameCollection = await _gameCollectionService.GetGameCollection(userId);
-            if (gameCollection == null) return NotFound();
+            var gameCollectionDto = await _gameCollectionService.GetGameCollection(userId);
+            if (gameCollectionDto == null) return NotFound();
 
-            var gameDto = await _gameService.GetGameByIdAsync(productId);
+            var gameDto = await _gameService.GetGameByIdAsync(gameId);
             if (gameDto == null) return NotFound();
 
             if (gameCondition != "Loose" && gameCondition != "Cib" && gameCondition != "New") return NotFound();
 
-            var result = await _gameCollectionService.RemoveGameFromCollection(gameCollection, gameDto, gameCondition);
+            var result = await _gameCollectionService.RemoveGameFromCollection(gameCollectionDto, gameDto, gameCondition);
             if (result) return Ok();
 
             return BadRequest();

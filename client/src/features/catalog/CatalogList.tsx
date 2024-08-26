@@ -10,8 +10,6 @@ interface Props {
 
 export default function CatalogList({ games, gamesLoaded }: Props) {
 
-
-
     return (
         <Box sx={{ m: 2 }}>
             <TableContainer component={Paper} sx={{ boxShadow: 3 }}>
@@ -44,7 +42,7 @@ export default function CatalogList({ games, gamesLoaded }: Props) {
                                     }}
                                 >
                                     <TableCell component="th" scope="row">{game.name}</TableCell>
-                                    <TableCell align="right">{game.consoleName.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())}</TableCell>
+                                    <TableCell align="right">{game.consoleName?.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())}</TableCell>
                                     <TableCell align="right">${game.loosePrice}</TableCell>
                                     <TableCell align="right">${game.completePrice}</TableCell>
                                     <TableCell align="right">${game.newPrice}</TableCell>

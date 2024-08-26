@@ -14,7 +14,7 @@ export default function Catalog() {
 
     useEffect(() => {
         if (!gamesLoaded) dispatch(fetchGamesAsync());
-    }, [dispatch, gamesLoaded, gameParams]);
+    }, [dispatch, gamesLoaded, gameParams, games]);
 
     useEffect(() => {
         if (!consolesLoaded) dispatch(fetchConsolesAsync());

@@ -7,13 +7,12 @@ import agent from "../../app/api/agent";
 
 interface CatalogState {
     gamesLoaded: boolean;
-    consolesLoaded: boolean,
+    consolesLoaded: boolean;
     status: string;
     consoles: string[];
     gameParams: GameParams;
     metaData: MetaData | null;
     accessToken: string | null;
-    // gameCovers: { [key: string]: string };
 }
 
 const gamesAdapter = createEntityAdapter<Game>();

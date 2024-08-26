@@ -15,12 +15,16 @@ namespace API.Services
         private readonly IAccountRepository _accountRepository;
         private readonly IGameCollectionService _gameCollectionService;
         private readonly TokenService _tokenService;
+        private readonly UserManager<User> _userManager;
 
-        public AccountService(IAccountRepository accountRepository, IGameCollectionService gameCollectionService, TokenService tokenService)
+
+        public AccountService(UserManager<User> userManager, IAccountRepository accountRepository, IGameCollectionService gameCollectionService, TokenService tokenService)
         {
             _gameCollectionService = gameCollectionService;
             _tokenService = tokenService;
             _accountRepository = accountRepository;
+            _userManager = userManager;
+
         }
 
         public async Task<UserDto> LoginAccount(LoginDto loginDto)
@@ -29,13 +33,14 @@ namespace API.Services
             if (user == null || !await _accountRepository.CheckPassword(loginDto.Username, loginDto.Password))
                 return null;
 
-            var gameCollection = await _gameCollectionService.GetGameCollection(loginDto.Username);
+            var gameCollectionDto = await _gameCollectionService.GetGameCollectionDto(loginDto.Username);
 
             return new UserDto
             {
                 Email = user.Email,
+                Username = user.UserName,
                 Token = await _tokenService.GenerateToken(user),
-                GameCollection = gameCollection,
+                GameCollectionDto = gameCollectionDto
             };
         }
 
@@ -47,6 +52,19 @@ namespace API.Services
             if (!result) return false;
 
             return await _accountRepository.AddToRole(user, "Member");
+        }
+        public async Task<UserDto> GetCurrentUser(string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+            var gameCollectionDto = await _gameCollectionService.GetGameCollectionDto(username);
+
+            return new UserDto
+            {
+                Email = user.Email,
+                Username = user.UserName,
+                Token = await _tokenService.GenerateToken(user),
+                GameCollectionDto = gameCollectionDto
+            };
         }
     }
 }

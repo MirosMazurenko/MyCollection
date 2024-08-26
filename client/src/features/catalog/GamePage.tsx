@@ -1,10 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card, CardContent, CardMedia, Grid, Button, Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
 import { fetchGameAsync, fetchGameCoverAsync, gameSelectors } from "./catalogSlice";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Typography from "../../app/components/Typography";
+import { addGameCollectionItemAsync } from "../gameCollection/gameCollectionSlice";
+import NotFound from "../../app/errors/NotFound";
+import { toast } from "react-toastify";
 
 export default function GamePage() {
     const dispatch = useAppDispatch();
@@ -12,6 +16,8 @@ export default function GamePage() {
     const { id } = useParams<{ id: string }>();
     const game = useAppSelector(state => gameSelectors.selectById(state, parseInt(id!)));
     const noImage = "https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg";
+    const { user } = useAppSelector(state => state.account);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (!game && id) {
@@ -31,7 +37,22 @@ export default function GamePage() {
         }
     }, [dispatch, game?.name]);
 
-    if (!game) return null;
+    const handleButtonClick = (gameCondition: string) => {
+        if (!user) {
+            navigate('/sign-in');
+        } else {
+            dispatch(addGameCollectionItemAsync({ gameId: parseInt(id!), gameCondition }))
+                .unwrap()
+                .then(() => {
+                    toast.success('Game added to collection!');
+                })
+                .catch((_error: any) => {
+                    toast.error('You already have this game!');
+                });
+        }
+    };
+
+    if (!game) return <NotFound></NotFound>;
 
     return (
         <Box display="flex" justifyContent="center" alignItems="center" sx={{ mt: 10, mb: 20 }}>
@@ -56,8 +77,8 @@ export default function GamePage() {
                                     </Typography>
                                 </Grid>
                                 <Grid item>
-                                    <Button variant="contained" color="primary" size="small">
-                                        Add
+                                    <Button onClick={() => handleButtonClick("Loose")} variant="contained" color="primary" size="small" style={{ minWidth: '100px' }}>
+                                        Add Loose
                                     </Button>
                                 </Grid>
                             </Grid>
@@ -68,8 +89,8 @@ export default function GamePage() {
                                     </Typography>
                                 </Grid>
                                 <Grid item>
-                                    <Button variant="contained" color="primary" size="small">
-                                        Add
+                                    <Button onClick={() => handleButtonClick("Cib")} variant="contained" color="primary" size="small" style={{ minWidth: '100px' }}>
+                                        Add Cib
                                     </Button>
                                 </Grid>
                             </Grid>
@@ -80,8 +101,8 @@ export default function GamePage() {
                                     </Typography>
                                 </Grid>
                                 <Grid item>
-                                    <Button variant="contained" color="primary" size="small">
-                                        Add
+                                    <Button onClick={() => handleButtonClick("New")} variant="contained" color="primary" size="small" style={{ minWidth: '100px' }}>
+                                        Add New
                                     </Button>
                                 </Grid>
                             </Grid>

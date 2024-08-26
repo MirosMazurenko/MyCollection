@@ -1,12 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { PaginatedResponse } from "../models/pagination";
+import { toast } from "react-toastify";
 
 const sleep = () => new Promise(resolve => setTimeout(resolve, 500))
 
 axios.defaults.baseURL = `http://localhost:5085/api/`;
 axios.defaults.withCredentials = true;
 const responseBody = (response: AxiosResponse) => response.data;
+
+axios.interceptors.request.use(async config => {
+    const { store } = await import('../store/configureStore');
+    const token = store.getState().account.user?.token;
+    if (token) config.headers.Authorization = `Bearer ${token}`;
+    return config;
+});
 
 axios.interceptors.response.use(async response => {
     if (import.meta.env.DEV) await sleep();
@@ -30,10 +38,10 @@ axios.interceptors.response.use(async response => {
                 }
                 throw modelStateErrors.flat();
             }
-
+            toast.error(data.title);
             break;
         case 401:
-
+            toast.error(data.title);
             break;
         case 403:
 
@@ -50,7 +58,7 @@ axios.interceptors.response.use(async response => {
 const requests = {
     get: (url: string, params?: URLSearchParams) => axios.get(url, { params }).then(responseBody),
     post: (url: string, body?: object) => axios.post(url, body, {
-        headers: { 'Content-Type': 'application/json' } // Ensure content type is set to JSON
+        headers: { 'Content-Type': 'application/json' }
     }).then(responseBody),
     put: (url: string, body: object) => axios.put(url, body, {
         headers: { 'Content-Type': 'application/json' }
@@ -64,14 +72,28 @@ const Catalog = {
     getConsoles: () => requests.get("games/consoles"),
 }
 
+const GameCollection = {
+    getGameCollection: () => requests.get('gameCollection/getGameCollection'),
+    addItem: (gameId: number, gameCondition: string) => requests.post(`gameCollection/addItem?gameId=${gameId}&gameCondition=${gameCondition}`),
+    removeItem: (gameId: number, gameCondition: string) => requests.del(`gameCollection/removeItem?gameId=${gameId}&gameCondition=${gameCondition}`),
+}
+
 const IGDB = {
     getAccessToken: () => requests.post('igdb/twitchToken'),
     getGameCover: (gameName: string) => requests.post(`igdb/${gameName}`),
 };
 
+const Account = {
+    login: (values: any) => requests.post('account/login', values),
+    register: (values: any) => requests.post('account/register', values),
+    getCurrentUser: () => requests.post('account/currentUser'),
+}
+
 const agent = {
     Catalog,
-    IGDB
+    GameCollection,
+    IGDB,
+    Account,
 }
 
 export default agent;

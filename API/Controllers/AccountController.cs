@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.DTOs;
+using API.Entities;
 using API.Services;
 using API.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,7 +15,7 @@ namespace API.Controllers
     public class AccountController : BaseApiController
     {
         private readonly IAccountService _accountService;
-        public AccountController(IAccountService accountService)
+        public AccountController(IAccountService accountService, IGameCollectionService gameCollectionService, TokenService tokenService)
         {
             _accountService = accountService;
         }
@@ -36,6 +38,11 @@ namespace API.Controllers
             return StatusCode(201);
         }
 
-
+        [Authorize]
+        [HttpPost("currentUser")]
+        public async Task<ActionResult<UserDto>> GetCurrentUser()
+        {
+            return await _accountService.GetCurrentUser(User.Identity.Name);
+        }
     }
 }

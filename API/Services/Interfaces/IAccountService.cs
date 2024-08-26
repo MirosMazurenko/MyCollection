@@ -10,5 +10,6 @@ namespace API.Services.Interfaces
     {
         Task<UserDto> LoginAccount(LoginDto loginDto);
         Task<bool> RegisterAccount(RegisterDto registerDto);
+        Task<UserDto> GetCurrentUser(string username);
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using API.DTOs;
 using API.Entities;
+using API.Extensions;
 using API.Repositories.Interfaces;
 using API.Services.Interfaces;
 using AutoMapper;
@@ -22,6 +23,16 @@ namespace API.Services
             _gameCollectionRepository = gameCollectionRepository;
         }
 
+        public async Task<GameCollectionDto> GetGameCollectionDto(string userId)
+        {
+            if (string.IsNullOrEmpty(userId)) return null;
+
+            var gameCollection = await _gameCollectionRepository.GetById(userId);
+
+            if (gameCollection == null) return null;
+
+            return gameCollection.MapGameCollectionToDto();
+        }
         public async Task<GameCollection> GetGameCollection(string userId)
         {
             if (string.IsNullOrEmpty(userId)) return null;
@@ -47,6 +58,8 @@ namespace API.Services
         public async Task<bool> InsertGameInCollection(GameCollection gameCollection, int gameId, string gameCondition)
         {
             if (gameCollection == null) return false;
+
+            if (gameCollection.Items.Any(g => g.GameId == gameId && g.GameCondition == gameCondition)) return false;
 
             var game = await _gameRepository.GetById(gameId);
 
